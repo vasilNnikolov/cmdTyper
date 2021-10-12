@@ -19,4 +19,5 @@ void initStartScreenValues(startScreenState* screenState);
 void switchStartScreenStates(startScreenState* screenState, char c);
 
 void renderStartScreen(startScreenState* screenState, char c);
+
 #endif
