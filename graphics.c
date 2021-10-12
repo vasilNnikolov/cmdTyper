@@ -1,6 +1,6 @@
 #include "graphics.h"
 
-void printWord(int x, int y, char* word, int word_length, state attr){
+void printWord(int x, int y, char* word, textState attr){
     attron(attr);
     mvaddstr(y, x, word);
     attroff(attr);

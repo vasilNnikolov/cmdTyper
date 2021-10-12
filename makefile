@@ -1,7 +1,7 @@
 CC = gcc
 
-typer: typer.o graphics.o game.o
-	$(CC) typer.o graphics.o game.o -lncurses -lm -o typer 
+typer: typer.o graphics.o game.o start_screen.o
+	$(CC) typer.o graphics.o game.o start_screen.o -lncurses -lm -o typer 
 
 typer.o: typer.c
 	$(CC) -c typer.c
@@ -11,6 +11,9 @@ graphics.o: graphics.c graphics.h
 
 game.o: game.c game.h
 	$(CC) -c game.c
+
+start_screen.o: start_screen.c start_screen.h graphics.h
+	$(CC) -c start_screen.c
 
 clean:
 	rm typer *.o
