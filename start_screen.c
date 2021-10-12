@@ -36,11 +36,13 @@ void switchStartScreenStates(startScreenState* screenState, char c){
         {
         //switching menus
         case 'C': //right arrow
-            screenState->currentActiveMenu = (++screenState->currentActiveMenu)%2;
-            // break;
+            screenState->currentActiveMenu++;
+            screenState->currentActiveMenu = (2 + screenState->currentActiveMenu % 2)%2;
+            break;
         case 'D': //right arrow
-            screenState->currentActiveMenu = (--screenState->currentActiveMenu)%2;
-            //break;
+            screenState->currentActiveMenu--;
+            screenState->currentActiveMenu = (2 + screenState->currentActiveMenu % 2)%2;
+            break;
 
         //moving through menu items 
         case 'A': //arrow up
@@ -92,11 +94,21 @@ void renderStartScreen(startScreenState* screenState, char c){
                 else {state = normal;}
                 printWord(5, 8+2*i, screenState->timeMenuItems[i], state);
             }
+            for(int i=0; i < difficultyMenuLength; i++){
+                if(i == screenState->selectedDifficultyMenuIndex) {state = underlined;}
+                else {state = normal;}
+                printWord(20, 8+2*i, screenState->diffucultyMenuItems[i], state);
+            }
             break;
 
         case 1: //difficulty menu is active
-            for(int i=0; i < timeMenuLength; i++){
+            for(int i=0; i < difficultyMenuLength; i++){
                 if(i == screenState->selectedDifficultyMenuIndex) {state = highlited;}
+                else {state = normal;}
+                printWord(20, 8+2*i, screenState->diffucultyMenuItems[i], state);
+            }
+            for(int i=0; i < timeMenuLength; i++){
+                if(i == screenState->selectedTimeMenuIndex) {state = underlined;}
                 else {state = normal;}
                 printWord(5, 8+2*i, screenState->timeMenuItems[i], state);
             }
