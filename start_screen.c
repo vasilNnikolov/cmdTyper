@@ -27,7 +27,11 @@ void initStartScreenValues(startScreenState* screenState){
     screenState->currentActiveMenu = 0;
 }
 
-void switchStartScreenStates(startScreenState* screenState, char c){
+void switchStartScreenStates(startScreenState* screenState, char c, bool* gameStarted){
+    if(c == '\n'){
+        *gameStarted = true;
+        return;
+    }
     if(c == ESCAPE_KEY){
         // getch();
         c = getch();
@@ -77,8 +81,8 @@ void switchStartScreenStates(startScreenState* screenState, char c){
     }
 }
 
-void renderStartScreen(startScreenState* screenState, char c){
-    switchStartScreenStates(screenState, c);
+void renderStartScreen(startScreenState* screenState, char c, bool* gameStarted){
+    switchStartScreenStates(screenState, c, gameStarted);
 
     //actual rendering of the text
     printWord(5, 3, "CMD typing test", bold);
@@ -112,5 +116,6 @@ void renderStartScreen(startScreenState* screenState, char c){
                 else {state = normal;}
                 printWord(5, 8+2*i, screenState->timeMenuItems[i], state);
             }
+            break;
     }
 }

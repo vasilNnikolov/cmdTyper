@@ -39,9 +39,10 @@ int main(){
             c = ESCAPE_KEY;
         } 
         
-        renderStartScreen(&screenState, c);
+        renderStartScreen(&screenState, c, &gameStarted);
         refresh();
 
+        char lineOfWords[MAX_LINE_LENGTH];
         if(gameStarted){
             //main game loop
             while(1){
@@ -49,13 +50,10 @@ int main(){
 
                 // main logic goes here
 
-                // get random word
-                char* word = words[rand()%nWords];
-                printWord(5, 5, word, highlited); 
-                usleep(1000000);
 
                 int c = getch();
                 if(c == ESCAPE_KEY){
+                    gameStarted = false;
                     break;
                 }
                 //refresh();

@@ -3,7 +3,7 @@
 
 #define ESCAPE_KEY 27
 #include "game.h"
-
+#include <stdbool.h>
 typedef struct startScreenState{
     char timeMenuItems[4][MAX_WORD_LENGTH];
     int timeMenuValues[4]; //in seconds
@@ -16,8 +16,8 @@ typedef struct startScreenState{
 } startScreenState;
 void initStartScreenValues(startScreenState* screenState);
 
-void switchStartScreenStates(startScreenState* screenState, char c);
+void switchStartScreenStates(startScreenState* screenState, char c, bool* gameStarted);
 
-void renderStartScreen(startScreenState* screenState, char c);
+void renderStartScreen(startScreenState* screenState, char c, bool* gameStarted);
 
 #endif
