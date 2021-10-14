@@ -10,23 +10,15 @@
 #include "graphics.h"
 #include "game.h"
 #include "start_screen.h"
-int main2(){
-    char lineOfWords[MAX_LINE_LENGTH];
-    int currentLinePosition = 0, currentLineLength;
-    int nWords;
-    char* wordsFile = "words.txt";
-    char** words = getWords(wordsFile, &nWords);
-    getLineFromFile(lineOfWords, &currentLineLength, words, nWords);
-    printf("%s\n", lineOfWords);
-    return 0;
-}
+#include "score_screen.h"
+
 
 int main(){
     char* wordsFile = "words.txt";
     //initialise the screen
     setupTerminal();
     //start screen loop
-    bool gameStarted = false;
+    bool gameStarted = false, gamePlayed = false;
     // get length of file 
     int nWords;
     
@@ -59,6 +51,7 @@ int main(){
         usleep(100000);
         getLineFromFile(nextLineOfWords, &nextLineLength, words, nWords);
 
+        int correctCharsWritten = 0, allCharErrors = 0, correctedErrors = 0;
         if(gameStarted){
             //variables for timer handling
             long startTime;
@@ -69,7 +62,6 @@ int main(){
             char timerString[20];
             
             //main game loop
-            int correctCharsWritten = 0, allCharErrors = 0, correctedErrors = 0;
             while(gameStarted){
                 erase();
 
@@ -98,12 +90,14 @@ int main(){
                     timeLeft--;
                     if(timeLeft < 1){
                         gameStarted = false;
+                        gamePlayed = true;
                         break;
                     }
                 }
 
                 if(c == ESCAPE_KEY){
                     gameStarted = false;
+                    gamePlayed = true;
                     break;
                 }
                 if(c != -1){ //key was pressed
@@ -134,6 +128,11 @@ int main(){
                     currentLinePosition = 0;
                 }
                 usleep(10000);
+            }
+            if(gamePlayed){
+                // usleep(1000000);
+                //render score screen
+                renderEndScreen(screenState, correctCharsWritten, allCharErrors);            
             }
         }
         usleep(10000);
