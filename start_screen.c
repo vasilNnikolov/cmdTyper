@@ -10,7 +10,7 @@ void initStartScreenValues(startScreenState* screenState){
     strcpy(screenState->timeMenuItems[2], "2 minutes");
     strcpy(screenState->timeMenuItems[3], "5 minutes");
 
-    screenState->timeMenuValues[0] = 30;
+    screenState->timeMenuValues[0] = 10;
     screenState->timeMenuValues[1] = 60;
     screenState->timeMenuValues[2] = 120;
     screenState->timeMenuValues[3] = 300;

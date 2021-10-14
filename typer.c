@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 #include "graphics.h"
 #include "game.h"
@@ -55,11 +56,21 @@ int main(){
         bool isCharCorrect[MAX_LINE_LENGTH] = {[0 ... MAX_LINE_LENGTH - 1] = true};
         int currentLinePosition = 0, currentLineLength, nextLineLength;
         getLineFromFile(lineOfWords, &currentLineLength, words, nWords);
+        usleep(100000);
         getLineFromFile(nextLineOfWords, &nextLineLength, words, nWords);
+
         if(gameStarted){
+            //variables for timer handling
+            long startTime;
+            bool firstCharTyped = false;
+            int totalTime = screenState.timeMenuValues[screenState.selectedTimeMenuIndex];
+            int timeLeft = totalTime;
+            char* timerStringFormat = "Time left: %d";
+            char timerString[20];
+            
             //main game loop
             int correctCharsWritten = 0, allCharErrors = 0, correctedErrors = 0;
-            while(1){
+            while(gameStarted){
                 erase();
 
                 // main logic goes here
@@ -68,10 +79,29 @@ int main(){
                 //render line below
                 renderLine(12, 40, nextLineOfWords, -1, isCharCorrect); //-1 signifies the line is inactive
 
+                //render timer
+                sprintf(timerString, timerStringFormat, timeLeft);
+                printWord(5, 20, timerString, normal); //need to format string
 
                 refresh();
+
                 //handle keyboard input 
                 int c = getch();
+                if(!firstCharTyped && c == -1){ // no char has been typed yet
+                    continue; //this waits for the user to type a char to start the timer
+                }
+                if(!firstCharTyped){
+                    startTime = time(NULL); 
+                    firstCharTyped = true;
+                }
+                if((int)((time(NULL) - startTime)) != totalTime - timeLeft){// update timeLeft value
+                    timeLeft--;
+                    if(timeLeft < 1){
+                        gameStarted = false;
+                        break;
+                    }
+                }
+
                 if(c == ESCAPE_KEY){
                     gameStarted = false;
                     break;
@@ -106,7 +136,7 @@ int main(){
                 usleep(10000);
             }
         }
-        usleep(12000);
+        usleep(10000);
     }
 
 

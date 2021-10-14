@@ -57,7 +57,9 @@ char** getWords(char* filename, int* nWords){
 }
 
 void getLineFromFile(char* line, int* lineLength, char** words, int nWords){
-    srand(time(0));
+    clock_t start = clock();
+    double randomTime = (double)start/CLOCKS_PER_SEC;
+    srand((int)(randomTime*1000000));
     int i = 0; 
     while(i < MAX_LINE_LENGTH - 1){
         char* randomWord = words[rand() % nWords];
