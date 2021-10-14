@@ -12,6 +12,6 @@ char** getWords(char* filename, int* nWords);
 
 void getLineFromFile(char* line, int* lineLength, char** words, int nWords);
 
-void renderLine(char* line, int currentLinePosition, bool* isCharCorrect);
+void renderLine(int lineH, int lineMiddle, char* line, int currentLinePosition, bool* isCharCorrect);
 
 #endif

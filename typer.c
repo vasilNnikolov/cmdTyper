@@ -51,10 +51,11 @@ int main(){
         renderStartScreen(&screenState, c, &gameStarted);
         refresh();
 
-        char lineOfWords[MAX_LINE_LENGTH], lineWritten[MAX_LINE_LENGTH];
+        char lineOfWords[MAX_LINE_LENGTH], nextLineOfWords[MAX_LINE_LENGTH];
         bool isCharCorrect[MAX_LINE_LENGTH] = {[0 ... MAX_LINE_LENGTH - 1] = true};
-        int currentLinePosition = 0, currentLineLength;
+        int currentLinePosition = 0, currentLineLength, nextLineLength;
         getLineFromFile(lineOfWords, &currentLineLength, words, nWords);
+        getLineFromFile(nextLineOfWords, &nextLineLength, words, nWords);
         if(gameStarted){
             //main game loop
             int correctCharsWritten = 0, allCharErrors = 0, correctedErrors = 0;
@@ -62,8 +63,14 @@ int main(){
                 erase();
 
                 // main logic goes here
-                renderLine(lineOfWords, currentLinePosition, isCharCorrect);
+                //render main line
+                renderLine(10, 40, lineOfWords, currentLinePosition, isCharCorrect);
+                //render line below
+                renderLine(12, 40, nextLineOfWords, -1, isCharCorrect); //-1 signifies the line is inactive
 
+
+                refresh();
+                //handle keyboard input 
                 int c = getch();
                 if(c == ESCAPE_KEY){
                     gameStarted = false;
@@ -74,7 +81,6 @@ int main(){
                         if(currentLinePosition > 0){currentLinePosition--;}
                     }
                     else{
-                        lineWritten[currentLinePosition] = c;
                         if(c == lineOfWords[currentLinePosition]){ //correct char typed
                             correctCharsWritten++;
                             isCharCorrect[currentLinePosition] = true;
@@ -85,12 +91,18 @@ int main(){
                         currentLinePosition++;
                     }
                 }
+
+                //refresh data when cursor is at the end of the current line
                 if(currentLinePosition == currentLineLength - 1){ //-1 is so it does not draw the '\0'
+                    //curent line is the previous next line
+                    for(int i=0; i < MAX_LINE_LENGTH; i++){
+                        lineOfWords[i] = nextLineOfWords[i];
+                    }
+                    currentLineLength = nextLineLength;
                     //need to fetch anoter line from the file
-                    getLineFromFile(lineOfWords, &currentLineLength, words, nWords);
+                    getLineFromFile(nextLineOfWords, &nextLineLength, words, nWords);
                     currentLinePosition = 0;
                 }
-                refresh();
                 usleep(10000);
             }
         }

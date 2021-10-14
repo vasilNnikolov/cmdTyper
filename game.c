@@ -75,24 +75,29 @@ void getLineFromFile(char* line, int* lineLength, char** words, int nWords){
 }
 
 
-void renderLine(char* line, int currentLinePosition, bool* isCharCorrect){
-    int lineMiddle = 40, lineHeight = 15, lineLen = strlen(line);
-    for(int i=0; i < currentLinePosition; i++){
-        if(!isCharCorrect[i]){
-            attron(underlined);
-            mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
-            attroff(underlined);
-        }
-        else{
-            mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
-        }
+void renderLine(int lineHeight, int lineMiddle, char* line, int currentLinePosition, bool* isCharCorrect){
+    if(currentLinePosition == -1){// signifies line is inactive, shoud all be drawn in normal
+        printWord(lineMiddle - strlen(line)/2, lineHeight, line, normal);
     }
+    else{
+        int lineLen = strlen(line);
+        for(int i=0; i < currentLinePosition; i++){
+            if(!isCharCorrect[i]){
+                attron(underlined);
+                mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+                attroff(underlined);
+            }
+            else{
+                mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+            }
+        }
 
-    attron(highlited);
-    mvaddch(lineHeight, lineMiddle - lineLen/2 + currentLinePosition, line[currentLinePosition]);
-    attroff(highlited);
+        attron(highlited);
+        mvaddch(lineHeight, lineMiddle - lineLen/2 + currentLinePosition, line[currentLinePosition]);
+        attroff(highlited);
 
-    for(int i=currentLinePosition + 1; i < lineLen - 1; i++){
-        mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+        for(int i=currentLinePosition + 1; i < lineLen - 1; i++){
+            mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+        }
     }
 }
