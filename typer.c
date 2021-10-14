@@ -111,6 +111,7 @@ int main(){
                         }
                         else{
                             isCharCorrect[currentLinePosition] = false;
+                            allCharErrors++;
                         }
                         currentLinePosition++;
                     }

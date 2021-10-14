@@ -13,8 +13,12 @@ void renderEndScreen(startScreenState screenState, int correctCharsWritten, int 
         char wordsPerMinute[30];
         float timePerRound = screenState.timeMenuValues[screenState.selectedTimeMenuIndex];
         sprintf(wordsPerMinute, "Words per minute: %.1f", wpm*60/timePerRound);
-
         printWord(18, 8, wordsPerMinute, normal);
+
+        char charErrorsPerMinute[30];
+        sprintf(charErrorsPerMinute, "Errors per minute: %.1f", totalCharErrors*60/timePerRound);
+        printWord(18, 10, charErrorsPerMinute, normal);
+
         refresh();
 
         char c = getch();
