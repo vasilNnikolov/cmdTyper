@@ -1,6 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include <string.h>
+
 #include "game.h"
+#include "graphics.h"
 
 int lineCount(char* filename){
     FILE *fp = fopen(filename, "r");
@@ -30,12 +34,12 @@ char** getWords(char* filename, int* nWords){
         exit(1);
     }
     *nWords = lineCount(filename); 
-    printf("%d\n", *nWords);
     words = (char**)malloc(sizeof(char*) * (*nWords));
     int wordIndex = 0, charIndex = 0;
     char c;
     while((c = fgetc(file)) != EOF){
         if(c == '\n'){
+            words[wordIndex][charIndex] = '\0';
             wordIndex++;
             charIndex = 0;
         }
@@ -50,4 +54,45 @@ char** getWords(char* filename, int* nWords){
         }
     }
     return words;
+}
+
+void getLineFromFile(char* line, int* lineLength, char** words, int nWords){
+    srand(time(0));
+    int i = 0; 
+    while(i < MAX_LINE_LENGTH - 1){
+        char* randomWord = words[rand() % nWords];
+        if(i + strlen(randomWord) < MAX_LINE_LENGTH - 1){
+            for(int j=0; j < strlen(randomWord); j++){
+                line[j + i] = randomWord[j];
+            }
+            line[i + strlen(randomWord)] = ' ';
+            i += strlen(randomWord) + 1;
+        }
+        else{break;}
+    }
+    line[i] = '\0';
+    *lineLength = i + 1;
+}
+
+
+void renderLine(char* line, int currentLinePosition, bool* isCharCorrect){
+    int lineMiddle = 40, lineHeight = 15, lineLen = strlen(line);
+    for(int i=0; i < currentLinePosition; i++){
+        if(!isCharCorrect[i]){
+            attron(underlined);
+            mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+            attroff(underlined);
+        }
+        else{
+            mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+        }
+    }
+
+    attron(highlited);
+    mvaddch(lineHeight, lineMiddle - lineLen/2 + currentLinePosition, line[currentLinePosition]);
+    attroff(highlited);
+
+    for(int i=currentLinePosition + 1; i < lineLen - 1; i++){
+        mvaddch(lineHeight, lineMiddle - lineLen/2 + i, line[i]);
+    }
 }
